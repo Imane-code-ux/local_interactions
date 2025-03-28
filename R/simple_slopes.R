@@ -475,7 +475,7 @@ sim_slopes <- function(model, pred, modx, mod2 = NULL, modx.values = NULL,
       call[[1]] <- survey::svyglm
       newmod <- eval(call)
     } else {
-      # Creating the model
+    
       newmod <- j_update(model, data = dt)
     }
 
