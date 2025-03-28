@@ -479,26 +479,22 @@ sim_slopes <- function(model, pred, modx, mod2 = NULL, modx.values = NULL,
       newmod <- j_update(model, data = dt)
     }
 
-    if (robust != FALSE && is.null(v.cov)) {
-      # For J-N
+    # Inside sim_slopes(), update the handling of `vcov`
+    if (!is.null(vcov)) {
+      # Use the externally provided vcov matrix, but don't pass it twice
+      covmat <- vcov
+    } else if (robust != FALSE && is.null(v.cov)) {
       covmat <- get_robust_se(newmod, robust, cluster, dt)$vcov
     } else if (is.null(v.cov)) {
-      # For J-N
+      # Default vcov if no other options provided
       covmat <- vcov(newmod)
-    }else{
-      
-      if(!is.null(vcov)){
-        covmat <- vcov
-        
-      } else {
-        vcovargs <- v.cov.args
-        vcovargs[[which(sapply(vcovargs, function(x) length(x[[1]]) == 1 &&
-                                 x[[1]] == "model"))]] <-
-          newmod
-        covmat <- do.call(v.cov, vcovargs)
-      }
+    } else {
+      vcovargs <- v.cov.args
+      vcovargs[[which(sapply(vcovargs, function(x) length(x[[1]]) == 1 &&
+                               x[[1]] == "model"))]] <- newmod
+      covmat <- do.call(v.cov, vcovargs)
     }
-
+    
     # if (robust == FALSE & is.null()) {covmat <- NULL}
 
     if (johnson_neyman == TRUE) {
