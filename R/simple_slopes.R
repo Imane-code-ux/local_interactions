@@ -479,7 +479,6 @@ sim_slopes <- function(model, pred, modx, mod2 = NULL, modx.values = NULL,
       newmod <- j_update(model, data = dt)
     }
 
-    # Getting SEs, robust or otherwise
     if (robust != FALSE && is.null(v.cov)) {
       # For J-N
       covmat <- get_robust_se(newmod, robust, cluster, dt)$vcov
