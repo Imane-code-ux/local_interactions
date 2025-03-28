@@ -486,12 +486,18 @@ sim_slopes <- function(model, pred, modx, mod2 = NULL, modx.values = NULL,
     } else if (is.null(v.cov)) {
       # For J-N
       covmat <- vcov(newmod)
-    } else {
-      vcovargs <- v.cov.args
-      vcovargs[[which(sapply(vcovargs, function(x) length(x[[1]]) == 1 &&
-                               x[[1]] == "model"))]] <-
-        newmod
-      covmat <- do.call(v.cov, vcovargs)
+    }else{
+      
+      if(!is.null(vcov)){
+        covmat <- vcov
+        
+      } else {
+        vcovargs <- v.cov.args
+        vcovargs[[which(sapply(vcovargs, function(x) length(x[[1]]) == 1 &&
+                                 x[[1]] == "model"))]] <-
+          newmod
+        covmat <- do.call(v.cov, vcovargs)
+      }
     }
 
     # if (robust == FALSE & is.null()) {covmat <- NULL}
